@@ -1,0 +1,20 @@
+{
+  "name": "autotestinghw2",
+  "version": "1.0.0",
+  "private": true,
+  "description": "DemoQA end-to-end automation suite built with Playwright and Page Object Model.",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:1920": "cross-env VIEWPORT_WIDTH=1920 VIEWPORT_HEIGHT=1080 playwright test",
+    "test:1366": "cross-env VIEWPORT_WIDTH=1366 VIEWPORT_HEIGHT=768 playwright test",
+    "test:workers2": "cross-env workers=2 playwright test",
+    "test:workers4": "cross-env workers=4 playwright test",
+    "test:report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^9.8.0",
+    "@playwright/test": "^1.54.1",
+    "cross-env": "^7.0.3"
+  }
+}

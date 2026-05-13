@@ -1,0 +1,58 @@
+name: DemoQA E2E
+
+on:
+  pull_request:
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        viewport:
+          - width: 1920
+            height: 1080
+          - width: 1366
+            height: 768
+    env:
+      CI: true
+      workers: 2
+      VIEWPORT_WIDTH: ${{ matrix.viewport.width }}
+      VIEWPORT_HEIGHT: ${{ matrix.viewport.height }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chrome firefox
+
+      - name: Run Playwright tests
+        run: npx playwright test
+
+      - name: Upload HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ matrix.viewport.width }}x${{ matrix.viewport.height }}
+          path: playwright-report/
+          retention-days: 14
+
+      - name: Upload raw test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-results-${{ matrix.viewport.width }}x${{ matrix.viewport.height }}
+          path: test-results/
+          retention-days: 14
