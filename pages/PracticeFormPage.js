@@ -14,17 +14,11 @@ class PracticeFormPage extends BasePage {
     this.uploadInput = page.locator('#uploadPicture');
     this.submitButton = page.getByRole('button', { name: 'Submit' });
     this.resultModal = page.locator('.modal-content');
+    this.genderLabelMale = page.locator('label[for="gender-radio-1"]');
+    this.genderLabelFemale = page.locator('label[for="gender-radio-2"]');
+    this.genderLabelOther = page.locator('label[for="gender-radio-3"]');
   }
 
-  genderLabel(gender) {
-    const map = {
-      Male: 'gender-radio-1',
-      Female: 'gender-radio-2',
-      Other: 'gender-radio-3',
-    };
-
-    return this.page.locator(`label[for="${map[gender]}"]`);
-  }
 
   hobbyLabel(hobby) {
     const map = {
@@ -40,7 +34,17 @@ class PracticeFormPage extends BasePage {
     await this.firstName.fill(data.firstName);
     await this.lastName.fill(data.lastName);
     await this.email.fill(data.email);
-    await this.genderLabel(data.gender).click();
+    switch (data.gender) {
+      case 'Male':
+        await this.genderLabelMale.click();
+        break;
+      case 'Female':
+        await this.genderLabelFemale.click();
+        break;
+      case 'Other':
+        await this.genderLabelOther.click();
+        break;
+    }
     await this.mobile.fill(data.mobile);
     await this.selectDate(data.dateOfBirth);
     await this.fillSubjects(data.subjects);
